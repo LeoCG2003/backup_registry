@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Editar respaldo{% endblock %}
+
+{% block body %}
+<header class="topbar">
+<strong>Registro de Respaldos</strong>
+<a class="button secondary" href="{{url_for('main.dashboard')}}">
+    Regresar
+</a>
+</header>
+
+<main class="container narrow">
+<section class="card">
+
+<h1>Editar respaldo</h1>
+
+{% with messages=get_flashed_messages(with_categories=true) %}
+{% for category,message in messages %}
+<div class="alert {{category}}">{{message}}</div>
+{% endfor %}
+{% endwith %}
+
+<form method="post">
+
+<label>
+Sucursal
+
+<select name="branch_id" required>
+{% for branch in branches %}
+<option
+    value="{{branch.id}}"
+    {% if branch.id == backup.branch_id %}selected{% endif %}
+>
+    {{branch.name}}
+</option>
+{% endfor %}
+</select>
+
+</label>
+
+<label>
+Nombre / Descripción del archivo
+
+<input
+    name="description"
+    maxlength="255"
+    required
+    value="{{backup.description}}"
+>
+
+</label>
+
+<button type="submit">
+    Guardar cambios
+</button>
+
+</form>
+
+</section>
+</main>
+{% endblock %}

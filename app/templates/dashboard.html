@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Panel de control{% endblock %}
+{% block body %}
+<header class="topbar">
+<div><strong>Registro de Respaldos</strong> <span class="muted">· {{user_name}}</span></div>
+<form method="post" action="{{url_for('main.logout')}}"><button class="secondary">Cerrar sesión</button></form>
+</header>
+<main class="container">
+{% with messages=get_flashed_messages(with_categories=true) %}
+{% for category,message in messages %}<div class="alert {{category}}">{{message}}</div>{% endfor %}
+{% endwith %}
+<div class="toolbar">
+
+<form method="get">
+
+<label class="inline">
+Buscar
+
+<input
+    type="search"
+    name="search"
+    value="{{search}}"
+    placeholder="Buscar archivo..."
+>
+
+</label>
+
+<label class="inline">
+Sucursal
+
+<select name="branch_id" onchange="this.form.submit()">
+<option value="">Todas las sucursales</option>
+
+{% for branch in branches %}
+<option
+    value="{{branch.id}}"
+    {% if selected_branch == branch.id %}selected{% endif %}
+>
+    {{branch.name}}
+</option>
+{% endfor %}
+
+</select>
+
+</label>
+
+<button type="submit">
+Buscar
+</button>
+
+{% if search or selected_branch %}
+<a class="button secondary" href="{{url_for('main.dashboard')}}">
+    Limpiar
+</a>
+{% endif %}
+
+</form>
+
+<a class="button" href="{{url_for('main.new_backup')}}">
+    + Agregar respaldo
+</a>
+
+</div>
+<section class="card table-wrap">
+<table>
+<thead>
+<tr>
+    <th>Sucursal</th>
+    <th>Nombre / Descripción del archivo</th>
+    <th>Fecha</th>
+    <th>Hora</th>
+    <th>Creado por</th>
+    <th>Acciones</th>
+</tr>
+</thead>
+<tbody>
+{% for backup in backups %}
+<tr>
+<td>{{backup.branch_name}}</td>
+<td><code>{{backup.description}}</code></td>
+<td>{{backup.created_at.strftime("%Y-%m-%d")}}</td>
+<td>{{backup.created_at.strftime("%H:%M:%S")}}</td>
+<td>{{backup.creator_name}}</td>
+<td>
+    <a
+        class="button secondary"
+        href="{{url_for('main.edit_backup', backup_id=backup.id)}}"
+    >
+        Editar
+    </a>
+
+    <form
+        method="post"
+        action="{{url_for('main.delete_backup', backup_id=backup.id)}}"
+        style="display:inline;"
+        onsubmit="return confirm('¿Eliminar este respaldo?');"
+    >
+        <button type="submit">Eliminar</button>
+    </form>
+</td>
+</tr>
+{% else %}
+<<tr>
+    <td colspan="6" class="empty">
+        No hay respaldos registrados.
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</section>
+</main>
+{% endblock %}

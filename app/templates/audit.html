@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Registro de operaciones{% endblock %}
+
+{% block body %}
+<header class="topbar">
+<strong>Registro de Respaldos</strong>
+
+<a class="button secondary" href="{{url_for('main.dashboard')}}">
+    Regresar
+</a>
+</header>
+
+<main class="container">
+
+<section class="card table-wrap">
+
+<h1>Registro de operaciones</h1>
+
+<table>
+
+<thead>
+<tr>
+    <th>Usuario</th>
+    <th>Operación</th>
+    <th>Tabla</th>
+    <th>ID del registro</th>
+    <th>Detalles</th>
+    <th>Fecha y hora</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for log in logs %}
+
+<tr>
+    <td>{{log.username}}</td>
+    <td>{{log.operation}}</td>
+    <td>{{log.table_name}}</td>
+    <td>{{log.record_id}}</td>
+    <td>{{log.details}}</td>
+    <td>{{log.created_at.strftime("%Y-%m-%d %H:%M:%S")}}</td>
+</tr>
+
+{% else %}
+
+<tr>
+    <td colspan="6" class="empty">
+        No hay operaciones registradas.
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</section>
+
+</main>
+{% endblock %}
